@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 if [ -z "$XILINX_INSTALL_PATH" ]; then
 	XILINX_INSTALL_PATH="$XDG_DATA_HOME/xilinx"
@@ -22,6 +22,9 @@ function xilinx_install() {
 
 	# Run the installer
 	sh "$installer_path"
+
+	# Replace the absolute paths in *settings64*.sh with relative ones
+	"$(dirname "$(readlink -f "$BASH_SOURCE")")/fix_settings64.sh"
 
 	zenity --width=600 --info --text "Installation is complete.\nTo allow access to the hardware devices (necessary to program them within Vivado and Vitis), run <b>sudo $XILINX_INSTALL_PATH/Vivado/2020.2/data/xicom/cable_drivers/lin64/install_script/install_drivers/install_drivers &amp;&amp; sudo udevadm control --reload</b>, then reconnect all the devices (if any)"
 }
